@@ -1,10 +1,24 @@
 import { test, expect, LOGGED_OUT, defined } from '../fixtures';
+import type { Item } from '../../pages/ItemsPage';
 
 test.describe('Items page (logged in via saved session)', () => {
-    test('opens without logging in again @smoke', async ({ itemsPage, page }) => {
+    test('opens without logging in again', { tag: '@smoke' }, async ({ itemsPage, page }) => {
         await itemsPage.open();
         await expect(page).toHaveURL(/\/items$/);
         await expect(itemsPage.heading).toBeVisible();
+    });
+
+    // Partial match: the list's content depends on other tests running in parallel,
+    // so only the stable parts are listed. Omitted nodes are allowed.
+    test('has the expected structure', async ({ itemsPage, page }) => {
+        await itemsPage.open();
+        await expect(page.getByRole('main')).toMatchAriaSnapshot(`
+          - main:
+            - heading "Items" [level=1]
+            - textbox "New item name"
+            - button "Add item"
+            - list "Items"
+        `);
     });
 
     test('lists items created through the API', async ({ itemsPage, createItem }) => {
@@ -15,13 +29,26 @@ test.describe('Items page (logged in via saved session)', () => {
 
     test('adds an item through the UI', async ({ itemsPage, authedApi, trackItem }) => {
         const name = `UI item ${Date.now()}`;
-        await itemsPage.open();
-        const created = defined(await itemsPage.addItem(name), `The app rejected "${name}"`);
-        trackItem(created);
 
-        await expect(itemsPage.item(name)).toBeVisible();
-        // The UI and the API agree
-        expect((await authedApi.get(`/api/items/${created.id}`)).body).toMatchObject({ name });
+        const created = await test.step('add the item on the page', async () => {
+            await itemsPage.open();
+            const item = defined(await itemsPage.addItem(name), `The app rejected "${name}"`);
+            trackItem(item);
+            return item;
+        });
+
+        await test.step('the list shows it', async () => {
+            await expect(itemsPage.item(name)).toBeVisible();
+        });
+
+        await test.step('the API returns it', async () => {
+            // Retries until the API agrees, for apps that save asynchronously
+            await expect
+                .poll(async () => (await authedApi.get<Item>(`/api/items/${created.id}`)).body, {
+                    message: `item ${created.id} should be readable through the API`,
+                })
+                .toMatchObject({ name });
+        });
     });
 
     test('rejects an empty name', async ({ itemsPage }) => {

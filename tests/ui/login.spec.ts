@@ -8,9 +8,24 @@ test.describe('Login', () => {
         await loginPage.open();
     });
 
-    test('logs in with the configured credentials @smoke', async ({ loginPage, credentials }) => {
-        await loginPage.login(credentials.username, credentials.password);
-        await expect(loginPage.welcome).toHaveText(`Welcome, ${credentials.username}`);
+    test('has the expected structure', async ({ page }) => {
+        await expect(page.getByRole('main')).toMatchAriaSnapshot(`
+          - main:
+            - heading "Log in" [level=1]
+            - textbox "Username"
+            - textbox "Password"
+            - button "Log in"
+        `);
+    });
+
+    test('logs in with the configured credentials', { tag: '@smoke' }, async ({ loginPage, credentials }) => {
+        await test.step('submit the configured credentials', async () => {
+            await loginPage.login(credentials.username, credentials.password);
+        });
+
+        await test.step('the welcome message names the user', async () => {
+            await expect(loginPage.welcome).toHaveText(`Welcome, ${credentials.username}`);
+        });
     });
 
     test('rejects a wrong password', async ({ loginPage, credentials }) => {

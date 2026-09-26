@@ -16,6 +16,12 @@ export class ItemsPage extends BasePage {
     readonly addButton: Locator;
     readonly error: Locator;
     readonly list: Locator;
+    /** Shown after 15 minutes without a click or keypress */
+    readonly sessionExpired: Locator;
+    readonly logInAgainLink: Locator;
+
+    /** Idle time after which the page shows the session-expired notice */
+    static readonly IDLE_TIMEOUT = '15:00';
 
     constructor(page: Page) {
         super(page);
@@ -24,6 +30,8 @@ export class ItemsPage extends BasePage {
         this.addButton = page.getByRole('button', { name: 'Add item' });
         this.error = page.getByRole('alert');
         this.list = page.getByRole('list', { name: 'Items' });
+        this.sessionExpired = page.getByText('Your session has expired');
+        this.logInAgainLink = page.getByRole('link', { name: 'Log in again' });
     }
 
     /** List entry for an item, located by its visible name. */

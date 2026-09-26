@@ -21,6 +21,10 @@
 
             <ul id="items" aria-label="Items"></ul>
             <p id="empty" hidden>No items yet</p>
+
+            <p id="session-expired" hidden>
+                Your session has expired after 15 minutes of inactivity. <a href="/login?next=/items">Log in again</a>
+            </p>
         </main>
 
         <script>
@@ -61,6 +65,21 @@
             });
 
             load();
+
+            // Client-side idle timeout: any click or keypress restarts the 15-minute timer.
+            // Tests control time with Playwright's page.clock instead of waiting.
+            const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+            let idleTimer;
+            function restartIdleTimer() {
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(() => {
+                    document.getElementById('new-item-form').hidden = true;
+                    document.getElementById('session-expired').hidden = false;
+                }, IDLE_TIMEOUT_MS);
+            }
+            document.addEventListener('click', restartIdleTimer);
+            document.addEventListener('keydown', restartIdleTimer);
+            restartIdleTimer();
         </script>
     </body>
 </html>

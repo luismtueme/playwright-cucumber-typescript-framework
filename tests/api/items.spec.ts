@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures';
 import type { Item } from '../../pages/ItemsPage';
 
 test.describe('Items API', () => {
-    test('creates an item and fetches it by id @smoke', async ({ authedApi, trackItem }) => {
+    test('creates an item and fetches it by id', { tag: '@smoke' }, async ({ authedApi, trackItem }) => {
         const created = await authedApi.post<Item>('/api/items', { name: 'Manhole 42 inspection' });
         expect(created.status).toBe(201);
         trackItem(created.body);

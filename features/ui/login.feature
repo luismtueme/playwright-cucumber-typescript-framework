@@ -6,6 +6,19 @@ Feature: Login
   Background:
     Given I am on the login page
 
+  Scenario: The page has the expected structure
+    Then the page structure is:
+      """yaml
+      - main:
+        - heading "Log in" [level=1]
+        - text: Username
+        - textbox "Username"
+        - text: Password
+        - textbox "Password"
+        - button "Log in"
+        - alert
+      """
+
   @Smoke
   Scenario: Log in with valid credentials
     When I log in with the configured credentials

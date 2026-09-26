@@ -1,6 +1,6 @@
 {
   "name": "playwright-cucumber-typescript-framework",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Playwright + Cucumber test automation framework in TypeScript: UI, API and database testing with Allure reporting",
   "license": "MIT",
