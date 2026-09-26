@@ -51,4 +51,4 @@ Or run everything in Docker, MySQL included: `docker compose run --rm tests`.
 
 The project follows [semantic versioning](https://semver.org). Add your change under **Unreleased** in [CHANGELOG.md](CHANGELOG.md). When releasing, move those entries under a new version, bump `version` in `package.json`, and tag the merge commit (`git tag vX.Y.Z && git push origin vX.Y.Z`).
 
-When Dependabot bumps `@playwright/test`, update the `FROM` line in the `Dockerfile` to match. A unit test fails with the exact line to use until you do. Visual baselines may also need `npm run test:visual -- --update` after a browser update.
+When Dependabot bumps `@cucumber/cucumber`, also set `@cucumber/messages` and `@cucumber/gherkin` to the exact versions it pins (Dependabot is told to skip them; `npm run test:unit` prints the command). When Dependabot bumps `@playwright/test`, update the `FROM` line in the `Dockerfile` to match. A unit test fails with the exact line to use until you do. Visual baselines may also need `npm run test:visual -- --update` after a browser update.

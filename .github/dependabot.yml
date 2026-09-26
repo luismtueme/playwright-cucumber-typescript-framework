@@ -18,6 +18,11 @@ updates:
       # Widen this when typescript-eslint's peer range does.
       - dependency-name: 'typescript'
         update-types: ['version-update:semver-major', 'version-update:semver-minor']
+      # These must equal the exact versions @cucumber/cucumber pins, or TypeScript sees two
+      # incompatible sets of enum types. Update them together with @cucumber/cucumber
+      # (unit/consistency.test.ts prints the exact command).
+      - dependency-name: '@cucumber/messages'
+      - dependency-name: '@cucumber/gherkin'
 
   # GitHub Actions used in .github/workflows
   - package-ecosystem: github-actions
