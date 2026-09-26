@@ -34,8 +34,8 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@cucumber/cucumber": "^13.2.1",
-    "@cucumber/gherkin": "42.0.0",
-    "@cucumber/messages": "34.2.0",
+    "@cucumber/gherkin": "42.0.1",
+    "@cucumber/messages": "34.2.1",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.48.1",
     "@types/node": "^22.20.4",
