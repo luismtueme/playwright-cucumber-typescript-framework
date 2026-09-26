@@ -17,6 +17,18 @@ Given('I open the {word} page', async function (name: string) {
     await pageObject(this).open();
 });
 
+/**
+ * Compares the accessible structure of <main> (what a screen reader announces) with
+ * the doc string. Playwright's toMatchAriaSnapshot() only works inside Playwright
+ * Test, so this compares locator.ariaSnapshot() exactly, retrying until it matches.
+ * Specs use toMatchAriaSnapshot(), which also allows partial matches.
+ */
+Then('the page structure is:', async function (expected: string) {
+    if (!this.page) throw new Error('No browser page: structure checks need a UI scenario.');
+    const main = this.page.getByRole('main');
+    await expect.poll(() => main.ariaSnapshot(), { message: 'accessible structure of <main>' }).toBe(expected.trim());
+});
+
 Then('the page has no accessibility violations', async function () {
     if (!this.page) throw new Error('No browser page: accessibility checks need a UI scenario.');
     const violations = await findAccessibilityViolations(this.page);

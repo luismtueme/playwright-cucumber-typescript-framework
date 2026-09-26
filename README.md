@@ -100,7 +100,7 @@ Invalid values fail at startup with the variable name, for example `TEST_BROWSER
 | `npm run test:playwright` | Playwright specs in `tests/` |
 | `npm run test:cucumber` | Cucumber scenarios in `features/` |
 | `npm run test:cucumber -- --tags "@Smoke"` | Scenarios by tag. Allowed tags are listed in `utils/lintGherkin.ts`: `@Smoke`, `@Regression`, `@ui`, `@api`, `@db`, `@authenticated`, `@a11y`, `@quarantine`, `@jira:ABC-123` |
-| `npx playwright test --grep @smoke` | Playwright specs by tag in the title |
+| `npx playwright test --grep @smoke` | Playwright specs by tag (`{ tag: '@smoke' }`) |
 | `npm run test:cucumber -- features/ui/login.feature` | One feature file |
 | `npm run test:unit` | Unit tests for the framework code (`unit/`), failing below 90% line coverage |
 | `npm run test:visual` | Visual comparison in Docker. Add `-- --update` to accept new baselines |
@@ -213,10 +213,16 @@ test('lists items created through the API', async ({ itemsPage, createItem }) =>
 test.describe('as a visitor', () => {
     test.use({ storageState: LOGGED_OUT }); // opt out of the saved session
 
-    test('logs in', async ({ loginPage, credentials }) => {
-        await loginPage.open();
-        await loginPage.login(credentials.username, credentials.password);
-        await expect(loginPage.welcome).toHaveText(`Welcome, ${credentials.username}`);
+    // Tags are structured (filter with --grep @smoke); steps show up in both reports
+    test('logs in', { tag: '@smoke' }, async ({ loginPage, credentials }) => {
+        await test.step('submit the configured credentials', async () => {
+            await loginPage.open();
+            await loginPage.login(credentials.username, credentials.password);
+        });
+
+        await test.step('the welcome message names the user', async () => {
+            await expect(loginPage.welcome).toHaveText(`Welcome, ${credentials.username}`);
+        });
     });
 });
 ```
@@ -268,6 +274,44 @@ Add a row to `features/ui/accessibility.feature` (and a line to `tests/ui/access
 ### Visual comparison
 
 Specs in `tests/visual/` compare screenshots with baselines in `tests/visual/__screenshots__/`. They run only through `npm run test:visual`, which uses the Playwright Docker image so fonts and anti-aliasing match everywhere (running them outside Docker is refused). After an intended UI change, run `npm run test:visual -- --update` and review the new images in the PR. Mask anything that changes between runs with `mask: [locator]`.
+
+### Page structure (aria snapshots)
+
+An aria snapshot is the page's accessible structure as YAML: headings, roles, labels, the things a screen reader announces. It fails when a label or role changes and ignores styling, so it's steadier than a screenshot for checking what a page contains.
+
+```typescript
+await expect(page.getByRole('main')).toMatchAriaSnapshot(`
+  - main:
+    - heading "Log in" [level=1]
+    - textbox "Username"
+    - button "Log in"
+`);
+```
+
+In specs, the snapshot can list only the parts you care about (partial match). In Cucumber, `Then the page structure is:` takes the YAML as a doc string and compares it exactly, because `toMatchAriaSnapshot()` only runs inside Playwright Test. Get the current structure with `await page.getByRole('main').ariaSnapshot()`.
+
+### Time-dependent behavior (page.clock)
+
+`page.clock` replaces the browser's timers, so tests don't wait in real time and boundaries are exact. Install it before the page loads:
+
+```typescript
+await page.clock.install({ time: new Date('2026-01-05T09:00:00') });
+await itemsPage.open();
+await page.clock.fastForward('14:59'); // not expired yet
+await page.clock.fastForward('00:01'); // exactly 15 minutes: expired
+```
+
+In Cucumber: `Given the browser clock is under test control`, then `When 15 minutes pass without activity`. See `tests/ui/session.spec.ts` and `features/ui/session.feature`.
+
+### Waiting for things that aren't on the page (expect.poll)
+
+Locator assertions retry on their own. For values from an API or the database, `expect.poll()` retries the function until the assertion passes or the expect timeout runs out, so tests stay correct when the app saves asynchronously:
+
+```typescript
+await expect.poll(async () => (await authedApi.get(`/api/items/${id}`)).body).toMatchObject({ name });
+```
+
+The `@db` steps use it for every database check.
 
 ### Quarantining a flaky test
 

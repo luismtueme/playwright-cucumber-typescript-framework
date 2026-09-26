@@ -4,6 +4,15 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-26
+
+### Added
+- `tag` option on specs (`{ tag: '@smoke' }`) instead of tags in titles; describe-level tags for accessibility and visual specs.
+- `test.step()` in specs, so the Playwright and Allure reports show named steps like Cucumber scenarios.
+- Aria snapshot checks of each page's accessible structure: `toMatchAriaSnapshot()` in specs (partial matching), and `Then the page structure is:` in Cucumber (exact match on `locator.ariaSnapshot()`, since the matcher needs Playwright Test).
+- `page.clock` tests for a new demo app feature: the items page shows a session-expired notice after 15 minutes without a click or keypress. Specs and a Cucumber feature cover the exact boundary and the timer restarting on activity.
+- `expect.poll()` in the `@db` steps and the UI/API agreement check, so they work with apps that save asynchronously.
+
 ## [1.0.0] - 2026-09-26
 
 TypeScript version of [playwright-cucumber-automation-framework v3.0.0](https://github.com/luismtueme/playwright-cucumber-automation-framework/releases/tag/v3.0.0). Same features, tests and CI gates; the history of those features is in that repository's changelog.
@@ -21,5 +30,6 @@ TypeScript version of [playwright-cucumber-automation-framework v3.0.0](https://
 - TypeScript is pinned to 6.0 until `typescript-eslint` supports TypeScript 7; Dependabot skips TypeScript majors.
 - `wrapStepFunction` has an exact type (it always returns a Promise), which the JavaScript version could only approximate.
 
-[Unreleased]: https://github.com/luismtueme/playwright-cucumber-typescript-framework/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/luismtueme/playwright-cucumber-typescript-framework/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/luismtueme/playwright-cucumber-typescript-framework/releases/tag/v1.1.0
 [1.0.0]: https://github.com/luismtueme/playwright-cucumber-typescript-framework/releases/tag/v1.0.0

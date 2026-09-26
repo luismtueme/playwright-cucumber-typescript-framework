@@ -11,7 +11,7 @@
  */
 import { test, expect, LOGGED_OUT } from '../fixtures';
 
-test.describe('Visual @visual', () => {
+test.describe('Visual', { tag: '@visual' }, () => {
     test('form page', async ({ formPage, page }) => {
         await formPage.open();
         await expect(page).toHaveScreenshot('form-page.png', { fullPage: true });

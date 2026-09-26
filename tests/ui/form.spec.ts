@@ -5,7 +5,22 @@ test.describe('Example form', () => {
         await formPage.open();
     });
 
-    test('shows the example action result @smoke', async ({ formPage }) => {
+    // The accessible structure: what a screen reader announces. Fails if a label,
+    // role or heading changes, and ignores styling (unlike a screenshot).
+    test('has the expected structure', async ({ page }) => {
+        await expect(page.getByRole('main')).toMatchAriaSnapshot(`
+          - main:
+            - heading "Example Application" [level=1]
+            - region "Example action":
+              - button "Run example action"
+            - text: Example input
+            - textbox "Example input"
+            - button "Submit"
+            - status
+        `);
+    });
+
+    test('shows the example action result', { tag: '@smoke' }, async ({ formPage }) => {
         await formPage.runExampleAction();
         await expect(formPage.result).toBeVisible();
     });

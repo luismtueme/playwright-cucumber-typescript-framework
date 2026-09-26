@@ -7,6 +7,19 @@ Feature: Example form
   Background:
     Given I am on the form page
 
+  Scenario: The page has the expected structure
+    Then the page structure is:
+      """yaml
+      - main:
+        - heading "Example Application" [level=1]
+        - region "Example action":
+          - button "Run example action"
+        - text: Example input
+        - textbox "Example input"
+        - button "Submit"
+        - status
+      """
+
   @Smoke
   Scenario: Run the example action
     When I run the example action
