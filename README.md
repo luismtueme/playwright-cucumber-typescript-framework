@@ -8,6 +8,16 @@ Write tests as Gherkin scenarios (Cucumber), as Playwright specs, or both. The t
 
 [![Playwright Tests](https://github.com/luismtueme/playwright-cucumber-typescript-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/luismtueme/playwright-cucumber-typescript-framework/actions/workflows/playwright.yml) · [Latest Allure report](https://luismtueme.github.io/playwright-cucumber-typescript-framework/allure-report/)
 
+## Which repo should I use?
+
+This is one of three versions of the same framework. They share the design, the demo app and the CI gates.
+
+| Repository | Tests are written as | Language | Choose it when |
+|---|---|---|---|
+| [playwright-typescript-framework](https://github.com/luismtueme/playwright-typescript-framework) | Playwright specs | TypeScript | Engineers write and read the tests. The most features and the simplest toolchain |
+| **playwright-cucumber-typescript-framework** (this one) | Gherkin scenarios and Playwright specs | TypeScript | Product owners, analysts or manual QA read or write scenarios in Given/When/Then |
+| [playwright-cucumber-automation-framework](https://github.com/luismtueme/playwright-cucumber-automation-framework) | Gherkin scenarios and Playwright specs | JavaScript (type-checked with JSDoc) | You want Cucumber without a TypeScript toolchain |
+
 ## What's included
 
 | Area | How it works |
