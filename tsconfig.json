@@ -1,0 +1,23 @@
+{
+  // Type-checks the project (`npm run typecheck`). Nothing is compiled: Playwright
+  // runs TypeScript natively and everything else runs through tsx.
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    // cucumber.mts (an ES module) imports config/index.ts by its full file name
+    "allowImportingTsExtensions": true,
+    "types": ["node"]
+  },
+  "include": ["**/*.ts", "**/*.mts"],
+  "exclude": ["node_modules", "allure-results", "allure-report", "html-report", "test-results"]
+}

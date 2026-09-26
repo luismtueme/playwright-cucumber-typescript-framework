@@ -1,0 +1,55 @@
+{
+  "name": "playwright-cucumber-typescript-framework",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright + Cucumber test automation framework in TypeScript: UI, API and database testing with Allure reporting",
+  "license": "MIT",
+  "author": "luismtueme",
+  "keywords": [
+    "playwright",
+    "cucumber",
+    "automation",
+    "testing"
+  ],
+  "engines": {
+    "node": ">=22.8"
+  },
+  "scripts": {
+    "test": "npm run clean && npm run test:playwright && npm run test:cucumber",
+    "test:playwright": "playwright test",
+    "test:cucumber": "node --import tsx node_modules/@cucumber/cucumber/bin/cucumber.js --config cucumber.mts",
+    "test:unit": "node --import tsx --test --experimental-test-coverage --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=85 --test-coverage-include=\"config/**\" --test-coverage-include=\"utils/apiClient.ts\" --test-coverage-include=\"utils/logger.ts\" --test-coverage-include=\"utils/stepErrorStatus.ts\" --test-coverage-include=\"utils/allureCategories.ts\" --test-coverage-include=\"utils/lintGherkin.ts\" --test-coverage-include=\"demo-app/server.ts\" \"unit/*.test.ts\"",
+    "test:visual": "tsx utils/visual.ts",
+    "test:quarantine": "tsx utils/runQuarantine.ts",
+    "check": "tsx utils/validateSteps.ts && playwright test --list",
+    "check:leftovers": "tsx utils/checkLeftoverData.ts",
+    "lint": "eslint . && prettier --check . && npm run -s lint:gherkin",
+    "lint:gherkin": "tsx utils/lintGherkin.ts",
+    "typecheck": "tsc -p .",
+    "format": "prettier --write . && eslint --fix .",
+    "clean": "tsx utils/allureMetadata.ts clean",
+    "demo": "tsx demo-app/server.ts",
+    "report": "allure generate allure-results --clean -o allure-report && allure open allure-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@cucumber/cucumber": "^13.2.1",
+    "@cucumber/gherkin": "42.0.0",
+    "@cucumber/messages": "34.2.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.48.1",
+    "@types/node": "^22.20.4",
+    "allure-commandline": "^2.46.1",
+    "allure-cucumberjs": "^3.12.2",
+    "allure-playwright": "^3.0.5",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.12.0",
+    "jiti": "^2.7.0",
+    "mysql2": "^3.11.3",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.70.1"
+  }
+}
