@@ -4,6 +4,12 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Fixed
+- README: the "one feature file" command ran every scenario; it now shows filtering by name. Docker commands include `--build`, so they never run a stale image. `npm run report` notes that Allure needs Java.
+
+### Added
+- Run guide (`docs/GUIDE.md`): setup on every OS, running and debugging, a worked example that adds a page end to end (page object, scenario, typed steps, spec and fixture, accessibility checks), API and database checks, quarantining, pointing the framework at your own app, troubleshooting and a command cheat sheet.
+
 ### Changed
 - README: the "Which repo should I use?" table links the new Java and Selenium version, [selenium-java-cucumber-framework](https://github.com/luismtueme/selenium-java-cucumber-framework).
 

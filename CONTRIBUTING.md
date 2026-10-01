@@ -11,7 +11,7 @@ cp .env.example .env   # optional; the demo app needs no settings
 npm test
 ```
 
-Or run everything in Docker, MySQL included: `docker compose run --rm tests`.
+Or run everything in Docker, MySQL included: `docker compose run --build --rm tests`.
 
 ## Making a change
 
