@@ -40,6 +40,7 @@ This is one of four versions of the same framework. They share the design and th
 | Accessibility | axe-core checks every page against WCAG 2.1 A/AA. Violations list the failing elements and link to the fix |
 | Visual comparison | Screenshots compared with committed baselines, rendered in Playwright's Docker image so every machine matches |
 | Flaky tests | Tag `@quarantine` (with a ticket): the test still runs and reports, but doesn't block merges |
+| Self-healing | Playwright's healer agent for Claude Code. It debugs a failing spec or scenario locally and quarantines with a ticket instead of `test.fixme()`. It does not run in CI |
 | Docker | `docker compose run --build --rm tests` runs everything, MySQL included, with no local setup beyond Docker |
 | Demo app | `demo-app/`: a small web app and JSON API the examples run against, so everything passes out of the box |
 
@@ -167,6 +168,8 @@ DB_HOST=127.0.0.1 DB_USER=tester DB_PASSWORD=tester DB_NAME=testdb npm run test:
 │   ├── allureCategories.ts   # Failure categories
 │   ├── stepErrorStatus.ts    # Reports assertion failures as "failed", not "broken"
 │   └── validateSteps.ts      # Undefined/ambiguous step check (npm run check)
+├── .claude/agents/playwright-test-healer.md
+├── .mcp.json                 # Playwright test MCP server for the healer
 ├── playwright.config.ts
 ├── cucumber.mts              # ES module: Cucumber imports TypeScript configs as ESM
 ├── tsconfig.json
@@ -325,6 +328,12 @@ await expect.poll(async () => (await authedApi.get(`/api/items/${id}`)).body).to
 ```
 
 The `@db` steps use it for every database check.
+
+### Healing a failing test
+
+Playwright's [healer agent](https://playwright.dev/docs/test-agents) is set up for Claude Code (`.claude/agents/playwright-test-healer.md`, `.mcp.json`). Ask it to fix a failing spec or scenario. It debugs Playwright specs through the test MCP server and re-runs a Cucumber scenario with `npm run test:cucumber -- --name "..."`. It follows this framework: page objects, fixtures, cleanup, and the tag allowlist. It does not mark a test `test.fixme()`. If the test is right and the app is wrong, it quarantines with a ticket. It does not run in CI.
+
+On Windows, Claude Code may need the MCP server started through `cmd`: in `.mcp.json`, use `"command": "cmd"` and `"args": ["/c", "npx", "playwright", "run-test-mcp-server"]`.
 
 ### Quarantining a flaky test
 
