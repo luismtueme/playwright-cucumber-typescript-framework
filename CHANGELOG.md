@@ -12,6 +12,7 @@ All notable changes to this project. The format follows [Keep a Changelog](https
 - Run guide (`docs/GUIDE.md`): setup on every OS, running and debugging, a worked example that adds a page end to end (page object, scenario, typed steps, spec and fixture, accessibility checks), API and database checks, quarantining, pointing the framework at your own app, troubleshooting and a command cheat sheet.
 
 ### Changed
+- README: the repo list includes all six frameworks. The protected checks are Checks, Tests, and Visual.
 - README: the "Which repo should I use?" table links the new Java and Selenium version, [selenium-java-cucumber-framework](https://github.com/luismtueme/selenium-java-cucumber-framework).
 
 ## [1.1.0] - 2026-09-26

@@ -12,14 +12,16 @@ New here? Start with the [run guide](docs/GUIDE.md).
 
 ## Which repo should I use?
 
-This is one of four versions of the same framework. They share the design and the demo app, and the three Playwright versions also share the CI gates.
+This is one of six frameworks.
 
 | Repository | Tests are written as | Language | Choose it when |
 |---|---|---|---|
 | [playwright-typescript-framework](https://github.com/luismtueme/playwright-typescript-framework) | Playwright specs | TypeScript | Engineers write and read the tests. The most features and the simplest toolchain |
 | **playwright-cucumber-typescript-framework** (this one) | Gherkin scenarios and Playwright specs | TypeScript | Product owners, analysts or manual QA read or write scenarios in Given/When/Then |
 | [playwright-cucumber-automation-framework](https://github.com/luismtueme/playwright-cucumber-automation-framework) | Gherkin scenarios and Playwright specs | JavaScript (type-checked with JSDoc) | You want Cucumber without a TypeScript toolchain |
+| [playwright-python-framework](https://github.com/luismtueme/playwright-python-framework) | Pytest | Python | The same Playwright checks, without Node |
 | [selenium-java-cucumber-framework](https://github.com/luismtueme/selenium-java-cucumber-framework) | Gherkin scenarios | Java (Selenium WebDriver) | Your team works in Java, or needs Selenium: a Selenium Grid or WebDriver-based tooling |
+| [appium-java-cucumber-framework](https://github.com/luismtueme/appium-java-cucumber-framework) | Gherkin scenarios and JUnit specs | Java (Appium) | Native Android and iOS |
 
 ## What's included
 
@@ -362,9 +364,10 @@ In CI, the report for every push to `main` is published to GitHub Pages with tre
 | Tests | Both suites against the demo app, backed by a MySQL service container. Then quarantined tests (non-blocking) and a check that no test data was left behind |
 | Visual | Screenshot comparison in the Playwright Docker image. Uploads expected/actual/diff images on failure |
 | Publish Allure Report | On `main` only: builds the report and deploys it to GitHub Pages |
-| Nightly Cross-Browser | Daily at 06:00 UTC (and on demand): everything on Chromium, Firefox and WebKit. Not required to merge |
 
-`main` is protected: changes need a PR with Checks and Tests passing. Dependabot opens weekly update PRs. See [.github/GITHUB_ACTIONS_GUIDE.md](.github/GITHUB_ACTIONS_GUIDE.md) for setup in your own repository.
+`.github/workflows/nightly.yml` is a separate workflow. It runs daily at 06:00 UTC and on demand: both suites on Chromium, Firefox, and WebKit. It does not run on pull requests, and it is not required to merge.
+
+`main` is protected: changes need a PR with Checks, Tests, and Visual passing. Dependabot opens weekly update PRs. See [.github/GITHUB_ACTIONS_GUIDE.md](.github/GITHUB_ACTIONS_GUIDE.md) for setup in your own repository.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to make changes, and [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
 
