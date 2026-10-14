@@ -16,7 +16,7 @@ Automated testing workflow that runs on every pull request to `main`, every push
 | `Visual` | PRs and pushes | Screenshot comparison inside the Playwright Docker image (`npm run test:visual`). Uploads expected/actual/diff images on failure |
 | `Publish Allure Report` | Pushes to `main` only | Builds the Allure report (with trend history) and deploys it to GitHub Pages |
 
-`Checks` and `Tests` are the required status checks for merging into `main`. PR runs never publish a report and need no secrets.
+`Checks`, `Tests`, and `Visual` are the required status checks for merging into `main`. PR runs never publish a report and need no secrets.
 
 ### `nightly.yml`
 Runs both suites on Chromium, Firefox and WebKit every day at 06:00 UTC, and on demand from the Actions tab. Each browser is a separate job, and all three finish even if one fails. Allure results are uploaded per browser. It isn't a required check: PRs stay on Chromium for speed, and this catches browser-specific breakage within a day. To be notified, enable failed-workflow emails for scheduled runs in your GitHub notification settings.
